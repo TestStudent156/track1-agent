@@ -2,126 +2,107 @@
 
 ## Hybrid Token-Efficient Routing Agent
 
-An AI agent that classifies tasks across 8 categories and routes each to the **cheapest sufficient Fireworks AI model** — minimizing token usage while maintaining accuracy.
+An AI agent that classifies tasks across **8 categories** and routes each to the **cheapest sufficient Fireworks AI model** — minimizing token usage while maintaining accuracy. Uses a **zero-token regex classifier** (no LLM call for routing) and an **empirical routing table** built from real benchmark runs.
 
----
+### Allowed Models (Track 1)
 
-## 📁 Project Structure
+| Model | Tier | Best For |
+|-------|------|----------|
+| `minimax-m3` | Budget | NER (clean JSON, 256 tokens) |
+| `kimi-k2p7-code` | Premium | 7 categories — factual, math, sentiment, summarize, code-debug, logic, code-gen |
+| `gemma-4-31b-it` | Mid | Fallback / general |
+| `gemma-4-26b-a4b-it` | Mid | Fallback / general |
+| `gemma-4-31b-it-nvfp4` | Mid | Fallback / general |
+
+### Routing Strategy
 
 ```
-HackathonAMDII/
-├── agent.py              # Main agent: classify → route → call → output
-├── Dockerfile            # linux/amd64 Docker image definition
-├── entrypoint.sh         # Container entry point
-├── requirements.txt      # Python dependencies (minimal!)
-├── .env.example          # Template for local dev (DO NOT include in image)
-├── .dockerignore         # Excludes dev files from Docker build
-├── input/
-│   └── tasks.json        # Sample test tasks (all 8 categories)
-├── output/
-│   └── .gitkeep          # Placeholder for output directory
-├── Participant_Guide_AMD_Hackathon_ACT_II.md   # Full hackathon guide
-├── Track1_Specification.md                     # Track 1 spec summary
-└── README.md             # This file
+kimi-k2p7-code  →  factual, math, sentiment, summarize, code_debug, logic, code_gen
+minimax-m3      →  ner
+gemma-4-31b-it  →  fallback (if kimi or minimax unavailable)
+gemma-4-26b-a4b-it → fallback
+gemma-4-31b-it-nvfp4 → fallback
 ```
+
+## 📊 Results (8 Test Tasks)
+
+| Category | Model | Tokens |
+|----------|-------|--------|
+| factual | kimi-k2p7-code | 271 |
+| math | kimi-k2p7-code | 233 |
+| sentiment | kimi-k2p7-code | 295 |
+| summarize | kimi-k2p7-code | 451 |
+| ner | minimax-m3 | 256 |
+| code_debug | kimi-k2p7-code | 1,126 |
+| logic | kimi-k2p7-code | 1,691 |
+| code_gen | kimi-k2p7-code | 446 |
+| **Total** | | **~4,769** |
+
+- ✅ **8/8 tasks correct**
+- ✅ **Exit code 0**
+- ✅ **~40s runtime**
+- ✅ **152 MB Docker image**
 
 ## 🏗️ Architecture
 
 ```
-                    ┌──────────────────────┐
-                    │   Task Classifier     │  Keyword-based detection
-                    │   (8 categories)      │  → sentiment, factual, math,
-                    └──────────┬───────────┘     ner, summarize, code_debug,
-                               │                 code_gen, logic
-                    ┌──────────▼───────────┐
-                    │   Model Router        │  Picks cheapest model from
-                    │   (Cost Optimizer)    │  ALLOWED_MODELS that meets
-                    └──────────┬───────────┘  the tier requirement
-                               │
-              ┌────────────────┼────────────────┐
-              ▼                ▼                 ▼
-     ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-     │ Tier 1 Small │ │ Tier 2 Mid   │ │ Tier 3 Large │
-     │ Sentiment    │ │ Summarize    │ │ Math         │
-     │ Factual      │ │ NER          │ │ Logic        │
-     └──────┬───────┘ └──────┬───────┘ │ Code Debug   │
-            │                │         │ Code Gen     │
-            └────────────────┼─────────┘
-                             ▼
-                    ┌──────────────────┐
-                    │  Fireworks API   │  Single call per task
-                    │  (BASE_URL)      │  via FIREWORKS_BASE_URL
-                    └────────┬─────────┘
-                             ▼
-                    ┌──────────────────┐
-                    │  results.json    │  [{task_id, answer}]
-                    └──────────────────┘
+Input Task → Regex Classifier → Empirical Router → Fireworks Model → JSON Output
+   (0 tokens)   (<1ms, word-boundary)   (benchmark-built)   (single call)   (validated)
 ```
 
-## 🚀 Quick Start (Local Dev)
+## 🚀 Quick Start
 
 ```bash
-# 1. Set up environment
-cp .env.example .env
-# Edit .env with your Fireworks API credentials
-
-# 2. Install dependencies
 pip install -r requirements.txt
-
-# 3. Run locally
 python agent.py
-# → Reads input/tasks.json, writes output/results.json
+# Reads input/tasks.json → writes output/results.json
 ```
 
 ## 🐳 Docker Build & Test
 
 ```bash
-# Build for linux/amd64 (required by judging VM)
-docker buildx build --platform linux/amd64 -t track1-agent:latest .
+docker build --platform linux/amd64 -t track1-agent:latest .
 
-# Run with environment variables (simulates harness injection)
 docker run --rm \
-  -e FIREWORKS_API_KEY="your_key" \
+  -e FIREWORKS_API_KEY="fw_..." \
   -e FIREWORKS_BASE_URL="https://api.fireworks.ai/inference/v1" \
-  -e ALLOWED_MODELS="accounts/fireworks/models/glm-5p2,accounts/fireworks/models/llama-v3p1-8b-instruct" \
+  -e ALLOWED_MODELS="minimax-m3,kimi-k2p7-code,gemma-4-31b-it,gemma-4-26b-a4b-it,gemma-4-31b-it-nvfp4" \
   -v $(pwd)/input:/input \
   -v $(pwd)/output:/output \
   track1-agent:latest
 ```
 
-## 📤 Submitting
+## 🔄 GitHub Actions CI/CD
 
-```bash
-# Tag and push to a public registry
-docker buildx build --platform linux/amd64 \
-  -t ghcr.io/yourusername/track1-agent:latest \
-  --push .
-```
+Automated Docker build and test on every push. See [`.github/workflows/docker-build-test.yml`](.github/workflows/docker-build-test.yml).
 
-## 🔑 Environment Variables (injected by harness at runtime)
+## 🔑 Environment Variables
 
 | Variable | Description |
 |----------|-------------|
-| `FIREWORKS_API_KEY` | API key provided by harness |
-| `FIREWORKS_BASE_URL` | Base URL — ALL calls must go through this |
-| `ALLOWED_MODELS` | Comma-separated Fireworks model IDs |
+| `FIREWORKS_API_KEY` | API key (injected by harness) |
+| `FIREWORKS_BASE_URL` | `https://api.fireworks.ai/inference/v1` |
+| `ALLOWED_MODELS` | Comma-separated: `minimax-m3,kimi-k2p7-code,gemma-4-31b-it,gemma-4-26b-a4b-it,gemma-4-31b-it-nvfp4` |
 
-## ⚡ Token Optimization Strategies
+## 📁 Project Structure
 
-1. **Smart routing** — small models for simple tasks (sentiment, factual)
-2. **Minimal prompts** — category-specific, no generic boilerplate
-3. **No chain-of-thought in output** — answer directly, reasoning tokens count
-4. **temperature=0.0** — deterministic, no wasted tokens on variance
-5. **max_tokens cap** — prevents runaway responses
+```
+├── agent.py              # Main agent
+├── dockerfile            # Docker image
+├── entrypoint.sh         # Container entry point
+├── requirements.txt      # Python deps
+├── .github/workflows/    # CI/CD
+├── lablab-assets/        # Cover, slides, video
+├── input/tasks.json      # Sample tasks
+└── README.md
+```
+
+## ⚡ Token Optimizations
+
+1. **Zero-token classifier** — regex with word boundaries, no API call
+2. **Empirical routing** — benchmark-built table, not LLM-based
+3. **JSON response_format** — for sentiment + NER (blocks thinking tokens)
+4. **Category-specific max_tokens** — 200 (sentiment) up to 3000 (logic)
+5. **temperature=0.0** — deterministic, no variance waste
 6. **Single API call per task** — no multi-turn conversations
-
-## 📋 Rules Checklist
-
-- [x] Exit code 0 on success
-- [x] Max runtime 10 minutes
-- [x] Only ALLOWED_MODELS used
-- [x] All calls through FIREWORKS_BASE_URL
-- [x] No hardcoded answers
-- [x] Valid JSON output
-- [x] linux/amd64 manifest
-- [x] Image < 10GB
+7. **Fallback on empty response** — retry with most reliable model
