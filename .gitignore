@@ -1,0 +1,45 @@
+# Large binaries
+track1-agent.tar
+firectl.exe
+*.exe
+
+# Video files (too big for git)
+*.mp4
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Sensitive / env files
+docker-test.env
+*.env
+
+# Temp scripts
+check_syntax.py
+check_dataset.py
+check_pdf.py
+convert_pdf.py
+decode_pdf.py
+to_pdf.js
+build_video.py
+export_slides.py
+compare_tokens.py
+test_*.py
+show_results.py
+validate.py
+final_check.py
+find_cred.py
+empirical_labeling.py
+serve_*.py
+serve_*.sh
+download_*.py
+get_release.py
+
+# Misc
+Screenshot1.png
+Handoff_Note.md
+Gemma_Test_Results.md
+sft_dataset.jsonl
+
+# Output
+output/

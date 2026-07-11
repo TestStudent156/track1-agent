@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track 1 Video Slideshow - Auto-Play</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0c29;overflow:hidden;width:100vw;height:100vh;font-family:Arial,Helvetica,sans-serif}
+.slide{position:absolute;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:5vw;text-align:center;opacity:0;transition:opacity 0.8s ease}
+.slide.active{opacity:1}
+h1{font-size:5vw;background:linear-gradient(90deg,#ff6a00,#ee0979);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:3vh}
+h2{font-size:3.5vw;color:#00d2ff;margin-bottom:3vh}
+h3{font-size:2.2vw;color:#c0c8e0;margin-bottom:2vh}
+p,li{font-size:1.8vw;color:#8888aa;line-height:1.6;max-width:80vw}
+ul{text-align:left;max-width:70vw}
+li{margin-bottom:1.2vh}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:3vw;max-width:80vw;margin-top:3vh}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2vw;max-width:85vw;margin-top:3vh}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:2.5vw;text-align:center}
+.metric{font-size:5vw;font-weight:bold;background:linear-gradient(90deg,#00d2ff,#3a7bd5);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tag{display:inline-block;background:rgba(238,9,121,0.15);color:#ff77aa;padding:0.5vh 1.5vw;border-radius:20px;font-size:1.4vw;margin:0.3vh 0.3vw}
+code{background:rgba(255,255,255,0.06);padding:0.3vh 0.6vw;border-radius:4px;font-size:1.6vw;color:#88ddff}
+.flow{display:flex;align-items:center;justify-content:center;gap:1vw;margin-top:3vh;flex-wrap:wrap}
+.flow-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:2vh 2vw;font-size:1.6vw}
+.arrow{font-size:2.2vw;color:#444}
+.progress{position:fixed;bottom:2vh;left:0;height:4px;background:linear-gradient(90deg,#ff6a00,#ee0979);transition:width 0.3s linear;z-index:100}
+.timer{position:fixed;bottom:4vh;right:3vw;color:#444466;font-size:1.2vw;z-index:100}
+.countdown{position:fixed;top:2vh;right:3vw;color:#333355;font-size:1vw;z-index:100}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" id="s1">
+<h1>Hybrid Token-Efficient<br>Routing Agent</h1>
+<h2>AMD Hackathon ACT II · Track 1</h2>
+<p style="margin-top:3vh;">Docker-based AI pipeline — 8 categories, 2 optimized model routes,<br>zero extra tokens for classification.</p>
+<div style="margin-top:5vh;">
+<span class="tag">Fireworks AI</span><span class="tag">Python</span><span class="tag">Docker</span><span class="tag">OpenAI SDK</span><span class="tag">Regex</span>
+</div>
+</div>
+
+<!-- SLIDE 2: The Problem -->
+<div class="slide" id="s2">
+<h2>The Problem: Token Waste</h2>
+<div class="grid2">
+<div class="card"><h3 style="color:#ff6a00;">Wrong Model</h3><p>Sending sentiment to a code model burns 5x the necessary tokens.</p></div>
+<div class="card"><h3 style="color:#ee0979;">Classifier Overhead</h3><p>Using an LLM just to route adds 50-200 tokens before solving anything.</p></div>
+<div class="card"><h3 style="color:#00d2ff;">40 Combinations</h3><p>5 models × 8 categories. Manual routing doesn't scale.</p></div>
+<div class="card"><h3 style="color:#3a7bd5;">Latency</h3><p>Every extra classification call adds 2-5 seconds.</p></div>
+</div>
+</div>
+
+<!-- SLIDE 3: Architecture -->
+<div class="slide" id="s3">
+<h2>Pipeline Architecture</h2>
+<div class="flow">
+<div class="flow-box" style="border-color:#ff6a00;">📥 Input</div><span class="arrow">→</span>
+<div class="flow-box" style="border-color:#00d2ff;">🔍 Regex</div><span class="arrow">→</span>
+<div class="flow-box" style="border-color:#ee0979;">🧠 Router</div><span class="arrow">→</span>
+<div class="flow-box" style="border-color:#3a7bd5;">🚀 Model</div><span class="arrow">→</span>
+<div class="flow-box" style="border-color:#00cc55;">📤 Output</div>
+</div>
+<ul style="margin-top:4vh;">
+<li><strong>Zero-Token Decision:</strong> Regex classifier reads prompt patterns — no API call, &lt;1ms latency.</li>
+<li><strong>Empirical Routing:</strong> Benchmark-built table picks the cheapest model per category.</li>
+<li><strong>Per-Category Tuning:</strong> Custom system prompts, JSON response_format, max_tokens caps.</li>
+<li><strong>Automatic Fallback:</strong> Empty or malformed response → retry with most reliable model.</li>
+</ul>
+</div>
+
+<!-- SLIDE 4: 8 Categories -->
+<div class="slide" id="s4">
+<h2>8 Categories · 2 Optimized Routes</h2>
+<div class="grid2">
+<div>
+<h3 style="color:#ee0979;">→ kimi-k2p7-code (7/8)</h3>
+<ul><li>📚 Factual Knowledge</li><li>🧮 Mathematical Reasoning</li><li>💬 Sentiment Classification</li><li>📝 Text Summarization</li><li>🐛 Code Debugging</li><li>🧩 Logical Reasoning</li><li>💻 Code Generation</li></ul>
+</div>
+<div>
+<h3 style="color:#3a7bd5;">→ minimax-m3 (1/8)</h3>
+<ul><li>🏷️ Named Entity Recognition</li></ul>
+<div class="card" style="margin-top:3vh;"><h3 style="color:#00cc55;">Why minimax for NER?</h3><p>256 tokens vs 397 on kimi.<br>Clean structured JSON.<br>No thinking artifacts.</p></div>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 5: Token Optimization -->
+<div class="slide" id="s5">
+<h2>Token Optimization Strategy</h2>
+<div class="grid3">
+<div class="card"><div class="metric">0</div><h3>Classification</h3><p>Regex runs locally. Saves 50-200 tokens per task.</p></div>
+<div class="card"><div class="metric">JSON</div><h3>Response Format</h3><p>JSON mode for sentiment + NER blocks reasoning tokens from output.</p></div>
+<div class="card"><div class="metric">caps</div><h3>max_tokens</h3><p>Category-specific: 200 (sentiment), 3000 (logic). temperature=0.0.</p></div>
+</div>
+<div style="margin-top:4vh;">
+<h3 style="color:#888;font-size:1.6vw;">Total: 4,769 tokens across 8 representative tasks</h3>
+<div style="display:flex;gap:1.5vw;justify-content:center;margin-top:2vh;flex-wrap:wrap;">
+<span class="tag">271 factual</span><span class="tag">233 math</span><span class="tag">295 sentiment</span><span class="tag">451 summarize</span>
+<span class="tag">256 NER</span><span class="tag">1,126 debug</span><span class="tag">1,691 logic</span><span class="tag">446 code</span>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 6: Results -->
+<div class="slide" id="s6">
+<h2>Results & Deployment</h2>
+<div class="grid3">
+<div class="card"><div class="metric">~40s</div><h3>Runtime</h3><p>All 8 tasks complete</p></div>
+<div class="card"><div class="metric">152 MB</div><h3>Image Size</h3><p>python:3.11-slim</p></div>
+<div class="card"><div class="metric">8/8</div><h3>Accuracy</h3><p>All pass. Exit code 0.</p></div>
+</div>
+<div style="margin-top:4vh;text-align:left;max-width:75vw;">
+<p>✅ <strong>I/O Contract:</strong> /input/tasks.json → /output/results.json</p>
+<p>✅ <strong>Env-Driven:</strong> FIREWORKS_API_KEY, ALLOWED_MODELS set by harness</p>
+<p>✅ <strong>No Hardcoding:</strong> Model IDs read from ALLOWED_MODELS at runtime</p>
+<p>✅ <strong>Public:</strong> docker.io/acidwichtel/track1-agent:latest</p>
+</div>
+</div>
+
+<!-- SLIDE 7: Thank You -->
+<div class="slide" id="s7">
+<h1>Thank You</h1>
+<h2>Hybrid Token-Efficient Routing Agent</h2>
+<div style="margin-top:5vh;display:grid;grid-template-columns:1fr 1fr;gap:5vw;text-align:left;">
+<div>
+<h3 style="color:#ff6a00;">Links</h3>
+<p>🔗 github.com/acidwichtel/track1-agent</p>
+<p>🐳 docker.io/acidwichtel/track1-agent</p>
+</div>
+<div>
+<h3 style="color:#00d2ff;">Stack</h3>
+<p>Python 3.11 · Fireworks AI · OpenAI SDK</p>
+<p>Docker · Regex Classification · Empirical Routing</p>
+</div>
+</div>
+<p style="margin-top:8vh;color:#555;font-size:1.6vw;">AMD Hackathon ACT II · Track 1 · July 2026</p>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="countdown" id="countdown"></div>
+
+<script>
+const SLIDE_DURATION = 13000; // 13 seconds per slide
+const TOTAL_SLIDES = 7;
+let currentSlide = 0;
+let startTime = Date.now();
+const progress = document.getElementById('progress');
+const countdown = document.getElementById('countdown');
+
+function showSlide(index) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  const slideId = `s${index + 1}`;
+  const slide = document.getElementById(slideId);
+  if (slide) slide.classList.add('active');
+}
+
+function updateUI() {
+  const elapsed = Date.now() - startTime;
+  const slideElapsed = elapsed % SLIDE_DURATION;
+  const slideProgress = (slideElapsed / SLIDE_DURATION) * 100;
+  progress.style.width = slideProgress + '%';
+
+  const remaining = Math.ceil((SLIDE_DURATION - slideElapsed) / 1000);
+  countdown.textContent = `Slide ${currentSlide + 1}/${TOTAL_SLIDES} · ${remaining}s`;
+
+  const newSlide = Math.floor(elapsed / SLIDE_DURATION) % TOTAL_SLIDES;
+  if (newSlide !== currentSlide) {
+    currentSlide = newSlide;
+    showSlide(currentSlide);
+  }
+}
+
+// Start
+showSlide(0);
+setInterval(updateUI, 100);
+</script>
+</body>
+</html>

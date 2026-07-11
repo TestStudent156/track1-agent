@@ -1,0 +1,20 @@
+# Exclude dev files from Docker build — keeps image lean
+.env
+.env.local
+.git/
+.gitignore
+__pycache__/
+*.pyc
+output/
+input/
+*.md
+test_*.py
+download_firectl.py
+get_release.py
+validate.py
+firectl.exe
+.venv/
+venv/
+node_modules/
+.DS_Store
+Thumbs.db

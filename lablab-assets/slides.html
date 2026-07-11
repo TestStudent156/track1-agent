@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track 1 - Hybrid Token-Efficient Routing Agent</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f0c29; color: #e0e0f0; font-family: 'Segoe UI', Arial, sans-serif; overflow-x: hidden; }
+  .slide { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4vw; text-align: center; scroll-snap-align: start; }
+  h1 { font-size: 3.5vw; background: linear-gradient(90deg, #ff6a00, #ee0979); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5vh; }
+  h2 { font-size: 2.5vw; color: #00d2ff; margin-bottom: 2vh; }
+  h3 { font-size: 1.6vw; color: #c0c8e0; margin-bottom: 1.5vh; }
+  p, li { font-size: 1.3vw; color: #8888aa; line-height: 1.7; max-width: 75vw; }
+  ul { text-align: left; max-width: 70vw; }
+  li { margin-bottom: 0.8vh; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; max-width: 75vw; margin-top: 3vh; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2vw; max-width: 80vw; margin-top: 3vh; }
+  .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5vw; text-align: center; }
+  .card h3 { margin-bottom: 0.5vh; }
+  .metric { font-size: 2.8vw; font-weight: bold; background: linear-gradient(90deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .tag { display: inline-block; background: rgba(238,9,121,0.15); color: #ff77aa; padding: 0.4vh 1vw; border-radius: 20px; font-size: 1vw; margin: 0.3vh 0.3vw; }
+  code { background: rgba(255,255,255,0.06); padding: 0.3vh 0.6vw; border-radius: 4px; font-size: 1.1vw; color: #88ddff; }
+  .flow { display: flex; align-items: center; justify-content: center; gap: 0.8vw; margin-top: 3vh; flex-wrap: wrap; }
+  .flow-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 1.8vh 1.8vw; font-size: 1.1vw; }
+  .arrow { font-size: 1.8vw; color: #444466; }
+  sup { font-size: 0.7vw; color: #666; }
+</style>
+</head>
+<body style="scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh;">
+
+<!-- Slide 1: Title -->
+<div class="slide">
+  <h1>Hybrid Token-Efficient Routing Agent</h1>
+  <h2>AMD Hackathon ACT II · Track 1</h2>
+  <p style="margin-top:2vh;">An intelligent Docker-based AI pipeline that classifies tasks and routes them<br>to the cheapest capable Fireworks AI model — in zero extra tokens.</p>
+  <div style="margin-top:4vh;">
+    <span class="tag">Fireworks AI</span>
+    <span class="tag">Python</span>
+    <span class="tag">Docker</span>
+    <span class="tag">OpenAI SDK</span>
+    <span class="tag">Regex</span>
+  </div>
+</div>
+
+<!-- Slide 2: The Problem -->
+<div class="slide">
+  <h2>The Problem</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="color:#ff6a00;">🔥 Token Waste</h3>
+      <p>Every task sent to the wrong model wastes tokens. A sentiment analysis on a code-generation model can burn 5x the necessary tokens.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:#ee0979;">🎯 LLM Classification Overhead</h3>
+      <p>Using a second LLM call just to classify the task adds 50-200 tokens of overhead — before even solving the problem.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:#00d2ff;">📊 Model Proliferation</h3>
+      <p>5 allowed Fireworks models across 8 categories = 40 combinations. Picking the right one manually is impossible at scale.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:#3a7bd5;">⚡ Latency Sensitivity</h3>
+      <p>Each multi-turn classification call adds 2-5 seconds. In production pipelines, this compounds quickly.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Architecture -->
+<div class="slide">
+  <h2>Pipeline Architecture</h2>
+  <div class="flow">
+    <div class="flow-box" style="border-color:#ff6a00;">📥 Input Task</div>
+    <span class="arrow">→</span>
+    <div class="flow-box" style="border-color:#00d2ff;">🔍 Regex Classifier</div>
+    <span class="arrow">→</span>
+    <div class="flow-box" style="border-color:#ee0979;">🧠 Empirical Router</div>
+    <span class="arrow">→</span>
+    <div class="flow-box" style="border-color:#3a7bd5;">🚀 Fireworks Model</div>
+    <span class="arrow">→</span>
+    <div class="flow-box" style="border-color:#00cc55;">📤 JSON Output</div>
+  </div>
+  <ul style="margin-top:4vh;">
+    <li><strong>Zero-Token Decision:</strong> The regex classifier reads the prompt text pattern and categorizes it — no API call, no token cost, < 1ms latency.</li>
+    <li><strong>Empirical Routing:</strong> A routing table built from real benchmark runs across all 5 allowed models picks the cheapest model per category.</li>
+    <li><strong>Category-Specific Optimization:</strong> Each category gets a tuned system prompt, response_format constraints, and max_tokens caps.</li>
+    <li><strong>Fallback Strategy:</strong> If the response is empty or malformed, the agent retries with the most reliable model.</li>
+  </ul>
+</div>
+
+<!-- Slide 4: 8 Categories -->
+<div class="slide">
+  <h2>8 Task Categories · 2 Optimized Routes</h2>
+  <div class="grid2">
+    <div>
+      <h3 style="color:#ee0979;">→ kimi-k2p7-code (7 categories)</h3>
+      <ul>
+        <li>📚 <strong>Factual Knowledge</strong> — concepts & definitions</li>
+        <li>🧮 <strong>Mathematical Reasoning</strong> — multi-step arithmetic</li>
+        <li>💬 <strong>Sentiment Classification</strong> — JSON mode</li>
+        <li>📝 <strong>Text Summarization</strong> — length-constrained</li>
+        <li>🐛 <strong>Code Debugging</strong> — bug find + corrected code</li>
+        <li>🧩 <strong>Logical Reasoning</strong> — constraint puzzles</li>
+        <li>💻 <strong>Code Generation</strong> — functions from spec</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:#3a7bd5;">→ minimax-m3 (1 category)</h3>
+      <ul>
+        <li>🏷️ <strong>Named Entity Recognition</strong> — persons, orgs, locations, dates</li>
+      </ul>
+      <div class="card" style="margin-top:3vh;">
+        <h3 style="color:#00cc55;">Why minimax-m3 for NER?</h3>
+        <p>256 tokens vs 397 on kimi.<br>Clean structured JSON output.<br>No thinking artifacts in response.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Token Optimization -->
+<div class="slide">
+  <h2>Token Optimization Strategy</h2>
+  <div class="grid3">
+    <div class="card">
+      <div class="metric">0</div>
+      <h3>Classification Tokens</h3>
+      <p>Regex-based classifier runs locally with zero API cost. Saves 50-200 tokens per task vs LLM-based routing.</p>
+    </div>
+    <div class="card">
+      <div class="metric">JSON</div>
+      <h3>Response Format</h3>
+      <p>JSON mode for sentiment + NER prevents thinking/reasoning tokens from leaking into output. <code>response_format={"type":"json_object"}</code></p>
+    </div>
+    <div class="card">
+      <div class="metric">max_tokens</div>
+      <h3>Tight Token Caps</h3>
+      <p>Category-specific <code>max_tokens</code>: 200 for sentiment, 3000 for logic. Prevents runaway generation. <code>temperature=0.0</code></p>
+    </div>
+  </div>
+  <div style="margin-top:4vh;">
+    <h3 style="color:#8888aa; font-size:1.2vw;">Total tokens across 8 representative tasks</h3>
+    <p style="font-size:4vw; font-weight:bold; background:linear-gradient(90deg,#00d2ff,#3a7bd5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">4,769</p>
+    <div style="display:flex;gap:2vw;justify-content:center;margin-top:1vh;flex-wrap:wrap;">
+      <span class="tag">factual: 271</span><span class="tag">math: 233</span><span class="tag">sentiment: 295</span><span class="tag">summarize: 451</span>
+      <span class="tag">NER: 256</span><span class="tag">code-debug: 1,126</span><span class="tag">logic: 1,691</span><span class="tag">code-gen: 446</span>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 6: Results -->
+<div class="slide">
+  <h2>Results &amp; Deployment</h2>
+  <div class="grid3">
+    <div class="card">
+      <div class="metric">40s</div>
+      <h3>Runtime</h3>
+      <p>All 8 tasks complete in ~40 seconds on a single Docker container.</p>
+    </div>
+    <div class="card">
+      <div class="metric">152 MB</div>
+      <h3>Image Size</h3>
+      <p>Lightweight Docker image built on <code>python:3.11-slim</code>. No local model hosting.</p>
+    </div>
+    <div class="card">
+      <div class="metric">8/8</div>
+      <h3>Accuracy</h3>
+      <p>All 8 test tasks pass the accuracy gate. Exit code 0. Valid JSON output.</p>
+    </div>
+  </div>
+  <div style="margin-top:4vh; text-align:left;max-width:70vw;">
+    <p>✅ <strong>I/O Contract:</strong> Reads <code>/input/tasks.json</code> → Writes <code>/output/results.json</code></p>
+    <p>✅ <strong>Env-Driven:</strong> <code>FIREWORKS_API_KEY</code>, <code>FIREWORKS_BASE_URL</code>, <code>ALLOWED_MODELS</code> — set by harness at runtime</p>
+    <p>✅ <strong>No Hardcoding:</strong> Model IDs read from <code>ALLOWED_MODELS</code> env var — dynamically adapts to available models</p>
+    <p>✅ <strong>Public Registry:</strong> <code>docker.io/acidwichtel/track1-agent:latest</code></p>
+  </div>
+</div>
+
+<!-- Slide 7: Thank You -->
+<div class="slide">
+  <h1>Thank You</h1>
+  <h2>Hybrid Token-Efficient Routing Agent</h2>
+  <div style="margin-top:4vh; display:grid; grid-template-columns:1fr 1fr; gap:4vw; text-align:left;">
+    <div>
+      <h3 style="color:#ff6a00;">Links</h3>
+      <p>🔗 <a href="https://github.com/acidwichtel/track1-agent" style="color:#88ddff;">github.com/acidwichtel/track1-agent</a></p>
+      <p>🐳 <a href="#" style="color:#88ddff;">docker.io/acidwichtel/track1-agent:latest</a></p>
+    </div>
+    <div>
+      <h3 style="color:#00d2ff;">Stack</h3>
+      <p>🐍 Python 3.11 · 🔥 Fireworks AI · 🤖 OpenAI SDK</p>
+      <p>🐳 Docker · 📋 Regex Classification · 🎯 Empirical Routing</p>
+    </div>
+  </div>
+  <p style="margin-top:6vh; color:#555577; font-size:1vw;">AMD Hackathon ACT II · Track 1 · July 2026</p>
+</div>
+
+</body>
+</html>

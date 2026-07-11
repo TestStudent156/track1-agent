@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0c29"/>
+      <stop offset="50%" style="stop-color:#302b63"/>
+      <stop offset="100%" style="stop-color:#24243e"/>
+    </linearGradient>
+    <linearGradient id="fire" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6a00"/>
+      <stop offset="50%" style="stop-color:#ee0979"/>
+      <stop offset="100%" style="stop-color:#ff6a00"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d2ff"/>
+      <stop offset="100%" style="stop-color:#3a7bd5"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid lines -->
+  <g opacity="0.04" stroke="#ffffff">
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="160" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="42" font-weight="bold" fill="url(#fire)" filter="url(#glow)">HYBRID TOKEN-EFFICIENT</text>
+  <text x="600" y="220" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="42" font-weight="bold" fill="url(#fire)" filter="url(#glow)">ROUTING AGENT</text>
+  <text x="600" y="275" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#8088a8">AMD Hackathon ACT II · Track 1 · Fireworks AI</text>
+
+  <!-- Metrics cards -->
+  <g transform="translate(80, 330)">
+    <rect x="0" y="0" width="310" height="100" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="155" y="35" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="url(#accent)">~4,769</text>
+    <text x="155" y="60" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#8888aa">Total Tokens Across 8 Tasks</text>
+    <text x="155" y="82" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="#555577">Zero-Token Regex Classifier</text>
+  </g>
+
+  <g transform="translate(445, 330)">
+    <rect x="0" y="0" width="310" height="100" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="155" y="35" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="url(#accent)">8 Categories</text>
+    <text x="155" y="60" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#8888aa">2 Optimized Model Routes</text>
+    <text x="155" y="82" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="#555577">kimi-k2p7-code + minimax-m3</text>
+  </g>
+
+  <g transform="translate(810, 330)">
+    <rect x="0" y="0" width="310" height="100" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="155" y="35" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="url(#accent)">152 MB</text>
+    <text x="155" y="60" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#8888aa">Docker Image · ~40s Runtime</text>
+    <text x="155" y="82" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="#555577">5 Fireworks Models Supported</text>
+  </g>
+
+  <!-- Pipeline -->
+  <g transform="translate(65, 470)">
+    <rect x="0" y="0" width="150" height="38" rx="19" fill="rgba(255,106,0,0.15)" stroke="#ff6a00" stroke-width="1"/>
+    <text x="75" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#ffaa66">Input Task</text>
+
+    <text x="172" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#444466">→</text>
+
+    <rect x="195" y="0" width="150" height="38" rx="19" fill="rgba(0,210,255,0.12)" stroke="#00d2ff" stroke-width="1"/>
+    <text x="270" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#66ddff">Regex Classifier</text>
+
+    <text x="367" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#444466">→</text>
+
+    <rect x="390" y="0" width="150" height="38" rx="19" fill="rgba(238,9,121,0.12)" stroke="#ee0979" stroke-width="1"/>
+    <text x="465" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#ff66aa">Empirical Router</text>
+
+    <text x="562" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#444466">→</text>
+
+    <rect x="585" y="0" width="160" height="38" rx="19" fill="rgba(58,123,213,0.12)" stroke="#3a7bd5" stroke-width="1"/>
+    <text x="665" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#88bbff">Fireworks Model</text>
+
+    <text x="767" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#444466">→</text>
+
+    <rect x="790" y="0" width="150" height="38" rx="19" fill="rgba(0,200,80,0.1)" stroke="#00cc55" stroke-width="1"/>
+    <text x="865" y="25" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#66ff88">JSON Output</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="605" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#444466">github.com/acidwichtel/track1-agent · docker.io/acidwichtel/track1-agent:latest · AMD Hackathon ACT II</text>
+</svg>
